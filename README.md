@@ -32,7 +32,7 @@ npm test
 
 ## Windows 可执行文件
 
-双击 `青囊起名.exe` 会留下一个命令行窗口，并在浏览器打开 http://127.0.0.1:38471 。不需要安装 Node。关掉那个命令行窗口，程序就退出。
+仓库根目录的 `wenming.exe` 就是 Windows 程序。双击后会留下一个命令行窗口，并在浏览器打开 http://127.0.0.1:38471 。不需要安装 Node。关掉那个命令行窗口，程序就退出。
 
 重新打包：
 
@@ -40,4 +40,4 @@ npm test
 sh scripts/build_exe.sh
 ```
 
-产物在 `desktop/青囊起名.exe`。
+产物在 `desktop/青囊起名.exe`，发布到仓库时复制为根目录的 `wenming.exe`。

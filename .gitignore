@@ -16,6 +16,8 @@
 # next.js
 /.next/
 /out/
+/desktop/out/
+/desktop/*.exe
 
 # production
 /build

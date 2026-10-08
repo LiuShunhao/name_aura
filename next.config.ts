@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // The dev server listens on 0.0.0.0, so Next only trusts that host plus localhost.
+  // Browsers that open http://127.0.0.1:38471 are a different origin; without this
+  // entry the HMR socket is rejected and the page stays as static HTML.
+  allowedDevOrigins: ["127.0.0.1"],
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

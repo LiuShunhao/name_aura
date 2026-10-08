@@ -236,7 +236,6 @@ export function Studio() {
               <Field label="公历生日">
                 <Input
                   type="date"
-                  required
                   value={form.date}
                   className="h-10"
                   onChange={(event) => patch({ date: event.target.value })}

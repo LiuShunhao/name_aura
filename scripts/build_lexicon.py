@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path("/workspace")
 CSV = Path("/tmp/word.csv")
 TSV = ROOT / "scripts" / "chars.tsv"
+CITE = ROOT / "scripts" / "citations.tsv"
 
 rows = {}
 if CSV.exists():
@@ -20,6 +21,7 @@ if CSV.exists():
 # 姓名学通行康熙笔画 / 五行。CSV 未收的字在此补上。
 MANUAL = {
     "之": (3, "火", "zhi", 1),
+    "涵": (12, "水", "han", 2),
     "源": (14, "水", "yuan", 2),
     "湛": (13, "水", "zhan", 4),
     "昊": (8, "火", "hao", 4),
@@ -122,6 +124,17 @@ def esc(text: str) -> str:
     return text.replace("\\", "\\\\").replace('"', '\\"')
 
 
+cites: dict[str, str] = {}
+if CITE.exists():
+    with CITE.open(encoding="utf-8") as handle:
+        next(handle)
+        for line in handle:
+            if not line.strip():
+                continue
+            char, cite = line.rstrip("\n").split("\t", 1)
+            cites[char] = cite
+
+
 chars = []
 missing = []
 seen = set()
@@ -160,6 +173,7 @@ with TSV.open(encoding="utf-8") as handle:
                 "parts": [s for s in glyphs.split(",") if s],
                 "industries": [s for s in industries.split(",") if s],
                 "freq": int(freq),
+                "cite": cites.get(c, ""),
             }
         )
 
@@ -188,6 +202,7 @@ lines = [
     "  parts: string[]",
     "  industries: string[]",
     "  freq: 1 | 2 | 3",
+    "  cite: string",
     "}",
     "",
     "export const GLYPHS: Glyph[] = [",
@@ -199,7 +214,7 @@ for item in chars:
         + f' gender: "{item["gender"]}", struct: "{item["struct"]}", role: "{item["role"]}",'
         + f" styles: {arr(item['styles'])}, sense: \"{esc(item['sense'])}\","
         + f" themes: {arr(item['themes'])}, parts: {arr(item['parts'])},"
-        + f" industries: {arr(item['industries'])}, freq: {item['freq']} as const"
+        + f" industries: {arr(item['industries'])}, freq: {item['freq']} as const, cite: \"{esc(item['cite'])}\""
         + " },"
     )
 lines.append("]")

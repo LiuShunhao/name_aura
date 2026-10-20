@@ -417,6 +417,14 @@ export function Studio() {
                       <span className="font-serif text-2xl text-[#9c2f2f]">{name.scores.total}</span>
                     </div>
                     <p className="mt-3 line-clamp-2 text-sm leading-6">{name.narrative}</p>
+                    {name.givenChars.some((glyph) => glyph.cite) ? (
+                      <p className="mt-2 line-clamp-2 text-xs leading-5 text-muted-foreground">
+                        {name.givenChars
+                          .filter((glyph) => glyph.cite)
+                          .map((glyph) => `${glyph.c}，${glyph.cite}`)
+                          .join("；")}
+                      </p>
+                    ) : null}
                     <div className="mt-3 flex flex-wrap gap-1.5">
                       {name.givenChars.map((glyph) => (
                         <Badge key={glyph.c} variant="secondary">
@@ -440,7 +448,7 @@ export function Studio() {
             ["五行补缺", "先排八字，分清身旺还是身弱，再定喜用。所缺的五行，只有属于喜用才补；忌神不硬补。"],
             ["生肖冲合", "生肖按春节确定，年柱按立春确定。与生肖相冲的字根一律避开，相合的偏旁会加分。"],
             ["五格与大凶", "笔画按康熙字典的部首还原。人格、地格、总格若是三十四、四十四、五十四或六十四画，不予选用。"],
-            ["音韵与羽翼", "平仄错开，声母不要相重。双名里，一个字承德行，一个字取气象。品牌名还要配上一句好记的话。"],
+            ["音韵与羽翼", "平仄错开，声母不要相重。双名里，一个字承德行，一个字取气象。能对上原文的字，会标出典籍出处。"],
           ].map(([title, body]) => (
             <article key={title}>
               <h2 className="font-serif text-xl">{title}</h2>
@@ -497,6 +505,7 @@ export function Studio() {
                       </span>
                     </div>
                     <p className="mt-2 text-sm leading-6">{glyph.sense}</p>
+                    {glyph.cite ? <p className="mt-1 text-xs leading-5 text-[#9c2f2f]">{glyph.cite}</p> : null}
                     <p className="text-xs text-muted-foreground">
                       {glyph.role === "root" ? "字根" : glyph.role === "wing" ? "羽翼" : "兼作字根与羽翼"} · {glyph.struct} ·{" "}
                       {ELEMENT_TONE[glyph.wx]}
@@ -564,7 +573,7 @@ function EmptyState() {
       <p className="text-xs tracking-[0.28em] text-[#9c2f2f]">尚未排盘</p>
       <h2 className="mt-3 font-serif text-3xl leading-tight">填上生辰或行业，再从五行所缺之处起名。</h2>
       <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">
-        给新生儿起名时，会先列出四柱、五行强弱和喜用，再给出避开大凶笔画的名字。给品牌起名时，会按行业的语气来取，也可以加上创始人的八字。点开一个名字，就能看到每个字为什么用在这里。
+        给新生儿起名时，会先列出四柱、五行强弱和喜用，再给出避开大凶笔画的名字。给品牌起名时，会按行业的语气来取，也可以加上创始人的八字。点开一个名字，就能看到每个字的意思，以及能对上原文的典籍出处。
       </p>
     </div>
   )

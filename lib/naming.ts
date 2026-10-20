@@ -446,29 +446,49 @@ export function proposeNames(request: NameRequest): Proposal {
   if (found.length < 8) notes.push("符合条件的名字不足八个，下面是全部结果。")
 
   const seed = request.seed ?? 0
-  found.sort((a, b) => b.scores.total - a.scores.total || hash(a.text + seed) - hash(b.text + seed))
-  const top = found.slice(0, Math.min(found.length, 56))
-  const shift = top.length ? seed % top.length : 0
-  const rotated = top.slice(shift).concat(top.slice(0, shift))
-  const picked: ProposedName[] = []
-  const used = new Map<string, number>()
-  const seenPairs = new Set<string>()
-  for (const item of rotated) {
-    const pair = [...item.given].sort().join("")
-    if (seenPairs.has(pair)) continue
-    const overused = item.givenChars.some((glyph) => (used.get(glyph.c) ?? 0) >= 2)
-    if (overused) continue
-    seenPairs.add(pair)
-    picked.push(item)
-    for (const glyph of item.givenChars) used.set(glyph.c, (used.get(glyph.c) ?? 0) + 1)
-    if (picked.length === 8) break
+  found.sort((a, b) => b.scores.total - a.scores.total || hash(a.text) - hash(b.text))
+  const ordered: ProposedName[] = []
+  const seenText = new Set<string>()
+  for (const item of found) {
+    if (seenText.has(item.text)) continue
+    seenText.add(item.text)
+    ordered.push(item)
   }
-  if (picked.length < 8) {
-    for (const item of rotated) {
-      if (picked.some((name) => name.text === item.text)) continue
-      picked.push(item)
-      if (picked.length === 8) break
+
+  const batches: ProposedName[][] = []
+  const reserved = new Set<string>()
+  const globalUse = new Map<string, number>()
+  const givenChars = (item: ProposedName) => item.givenChars.map((glyph) => glyph.c)
+
+  function take(maxUsed: number, batch: ProposedName[], local: Set<string>) {
+    for (const item of ordered) {
+      if (batch.length === 8) return
+      if (reserved.has(item.text)) continue
+      const chars = givenChars(item)
+      if (new Set(chars).size !== chars.length) continue
+      if (chars.some((char) => local.has(char))) continue
+      if (chars.some((char) => (globalUse.get(char) ?? 0) > maxUsed)) continue
+      batch.push(item)
+      for (const char of chars) local.add(char)
     }
+  }
+
+  for (let round = 0; round < 8; round++) {
+    const batch: ProposedName[] = []
+    const local = new Set<string>()
+    take(0, batch, local)
+    if (batch.length < 8) take(round, batch, local)
+    if (batch.length === 0) break
+    batches.push(batch)
+    for (const item of batch) {
+      reserved.add(item.text)
+      for (const char of givenChars(item)) globalUse.set(char, (globalUse.get(char) ?? 0) + 1)
+    }
+  }
+
+  const picked = batches.length ? batches[seed % batches.length] : []
+  if (seed > 0 && batches.length > 1 && seed % batches.length !== 0) {
+    notes.push("这一批换过用字，不与上一批重复。")
   }
 
   return { names: picked, chart, industry, yong: yongFinal, ji, notes }

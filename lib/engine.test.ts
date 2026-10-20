@@ -77,6 +77,23 @@ describe("naming", () => {
       assert.equal(name.givenChars.length, 2)
       assert.ok(name.scores.total >= 0 && name.scores.total <= 100)
     }
+    const used = result.names.flatMap((name) => name.givenChars.map((glyph) => glyph.c))
+    assert.equal(new Set(used).size, used.length)
+    const next = proposeNames({
+      mode: "child",
+      surname: "陈",
+      gender: "f",
+      year: 2019,
+      month: 6,
+      day: 18,
+      hour: 9,
+      minute: 30,
+      givenLength: 2,
+      styles: ["清雅"],
+      seed: 1,
+    })
+    const first = new Set(result.names.map((name) => name.text))
+    assert.ok(next.names.every((name) => !first.has(name.text)))
   })
 
   it("names a tea brand without a birth chart", () => {

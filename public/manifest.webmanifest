@@ -1,0 +1,26 @@
+{
+  "name": "问名 · 青囊起名",
+  "short_name": "青囊起名",
+  "description": "用八字五行、生肖、五格音韵和品牌语气，为新生儿与品牌取可解释的名字。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4efe4",
+  "theme_color": "#f4efe4",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

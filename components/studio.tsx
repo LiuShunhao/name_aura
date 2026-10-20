@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type ReactNode } from "react"
+import { useState, type InputHTMLAttributes, type ReactNode } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -165,7 +165,7 @@ export function Studio() {
   return (
     <div className="flex-1">
       <header className="border-b border-border/80">
-        <div className="mx-auto flex w-full max-w-6xl items-end justify-between gap-4 px-4 py-6 md:px-8">
+        <div className="mx-auto flex w-full max-w-6xl items-end justify-between gap-4 px-4 py-5 md:px-8 md:py-6">
           <div className="flex items-center gap-4">
             <div className="grid size-14 shrink-0 place-items-center border-2 border-[#9c2f2f] font-serif text-2xl text-[#9c2f2f]">
               名
@@ -234,19 +234,17 @@ export function Studio() {
                 </div>
               </Field>
               <Field label="公历生日">
-                <Input
+                <NativeInput
                   type="date"
                   value={form.date}
-                  className="h-10"
                   onChange={(event) => patch({ date: event.target.value })}
                 />
                 {future ? <p className="text-xs text-muted-foreground">这是预产期。出生后请用实际时辰再排一次。</p> : null}
               </Field>
               <Field label="出生时间">
-                <Input
+                <NativeInput
                   type="time"
                   value={form.time}
-                  className="h-10"
                   onChange={(event) => patch({ time: event.target.value })}
                 />
                 <div className="flex flex-wrap gap-1.5">
@@ -300,8 +298,8 @@ export function Studio() {
                 </div>
               </Field>
               <Field label="创始人生辰，可选">
-                <Input type="date" value={form.founderDate} className="h-10" onChange={(event) => patch({ founderDate: event.target.value })} />
-                <Input type="time" value={form.founderTime} className="h-10" onChange={(event) => patch({ founderTime: event.target.value })} />
+                <NativeInput type="date" value={form.founderDate} onChange={(event) => patch({ founderDate: event.target.value })} />
+                <NativeInput type="time" value={form.founderTime} onChange={(event) => patch({ founderTime: event.target.value })} />
                 <p className="text-xs leading-5 text-muted-foreground">填了之后，行业五行会和创始人喜用放在一起看。</p>
               </Field>
             </TabsContent>
@@ -451,7 +449,7 @@ export function Studio() {
           ))}
         </div>
         <p className="mx-auto w-full max-w-6xl px-4 pb-10 text-xs leading-5 text-muted-foreground md:px-8">
-          这是一套可解释的文化计算：八字用节气，晚子时日柱进一日；五格按减八十循环的八十一数理。它帮你取舍名字，不是命运判决，也不代替商标检索。
+          这是一套可解释的文化计算：八字用节气，晚子时日柱进一日；五格按减八十循环的八十一数理。它帮你取舍名字，不是命运判决，也不代替商标检索。手机浏览器可以把本页加到主屏幕，之后从图标打开。
         </p>
       </section>
 
@@ -539,6 +537,15 @@ export function Studio() {
         </DialogContent>
       </Dialog>
     </div>
+  )
+}
+
+function NativeInput(props: InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <input
+      {...props}
+      className="h-11 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+    />
   )
 }
 

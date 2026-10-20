@@ -121,7 +121,14 @@ export function readWuge(grids: WugeGrids): WugeReading {
     (tianToRen === "比和" || tianToRen === "生出" || tianToRen === "生入") &&
     (renToDi === "比和" || renToDi === "生出")
   const fought = tianToRen === "克入" || renToDi === "克入"
-  const flow = `天格${byKey.tian.element}${tianToRen === "生出" ? "生" : tianToRen === "生入" ? "受生于" : tianToRen === "克出" ? "克" : tianToRen === "克入" ? "受克于" : "比"}人格${byKey.ren.element}，人格${renToDi === "生出" ? "生" : renToDi === "生入" ? "受生于" : renToDi === "克出" ? "克" : renToDi === "克入" ? "受克于" : "比"}地格${byKey.di.element}`
+  const link = (from: string, to: string, kind: string) => {
+    if (kind === "生出") return `${from}生${to}`
+    if (kind === "生入") return `${from}受${to}所生`
+    if (kind === "克出") return `${from}克${to}`
+    if (kind === "克入") return `${from}受${to}所克`
+    return `${from}与${to}比和`
+  }
+  const flow = `${link(`天格之${byKey.tian.element}`, `人格之${byKey.ren.element}`, tianToRen)}，${link(`人格之${byKey.ren.element}`, `地格之${byKey.di.element}`, renToDi)}`
 
   const weights: Record<keyof WugeGrids, number> = {
     ren: 0.34,

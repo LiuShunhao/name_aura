@@ -13,7 +13,7 @@ const assetBase = process.env.PAGES_EXPORT === "1" ? "/name_aura" : ""
 
 export const metadata: Metadata = {
   title: "问名 · 青囊起名",
-  description: "用八字五行、生肖、五格音韵和品牌语气，为新生儿与品牌取可解释的名字。",
+  description: "按八字五行、生肖、五格、音韵和品牌语气，为新生儿与品牌取可以讲清楚的名字。",
   applicationName: "青囊起名",
   manifest: `${assetBase}/manifest.webmanifest`,
   appleWebApp: {

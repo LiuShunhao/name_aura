@@ -113,7 +113,7 @@ export function Studio() {
     const birth = next.mode === "child" ? parseDate(next.date) : parseDate(next.founderDate)
     const clock = parseTime(next.mode === "child" ? next.time : next.founderTime)
     if (next.mode === "child" && !birth) {
-      setError("请填写公历生日。预产期也可以，落地后再核时辰。")
+      setError("请填写公历生日。预产期也可以填，孩子出生后，请按实际时辰再排一次。")
       setResult(null)
       return
     }
@@ -176,7 +176,7 @@ export function Studio() {
             </div>
           </div>
           <p className="hidden max-w-xs text-right text-sm leading-6 text-muted-foreground sm:block">
-            周易为骨，营销为翼。先看缺什么，再让声音站得住。
+            周易为骨，营销为翼。先看五行缺什么，再把读音安顿好。
           </p>
         </div>
       </header>
@@ -207,7 +207,7 @@ export function Studio() {
                 <Input
                   value={form.surname}
                   maxLength={2}
-                  placeholder="陈，或欧阳"
+                  placeholder="如陈，或欧阳"
                   className="h-10"
                   onChange={(event) => patch({ surname: event.target.value })}
                 />
@@ -239,7 +239,7 @@ export function Studio() {
                   value={form.date}
                   onChange={(event) => patch({ date: event.target.value })}
                 />
-                {future ? <p className="text-xs text-muted-foreground">这是预产期。出生后请用实际时辰再排一次。</p> : null}
+                {future ? <p className="text-xs text-muted-foreground">这是预产期。孩子出生后，请按实际时辰再排一次。</p> : null}
               </Field>
               <Field label="出生时间">
                 <NativeInput
@@ -259,7 +259,7 @@ export function Studio() {
                     </button>
                   ))}
                 </div>
-                <p className="text-xs leading-5 text-muted-foreground">不知时辰可以空着。晚子（23:00 后）日柱按次日。</p>
+                <p className="text-xs leading-5 text-muted-foreground">不知道时辰可以不填。晚子时（23:00 以后），日柱按次日计算。</p>
               </Field>
               <Field label="名字字数">
                 <div className="grid grid-cols-2 gap-2">
@@ -297,16 +297,16 @@ export function Studio() {
                   </Button>
                 </div>
               </Field>
-              <Field label="创始人生辰，可选">
+              <Field label="创始人生辰（可选）">
                 <NativeInput type="date" value={form.founderDate} onChange={(event) => patch({ founderDate: event.target.value })} />
                 <NativeInput type="time" value={form.founderTime} onChange={(event) => patch({ founderTime: event.target.value })} />
-                <p className="text-xs leading-5 text-muted-foreground">填了之后，行业五行会和创始人喜用放在一起看。</p>
+                <p className="text-xs leading-5 text-muted-foreground">填写之后，会把行业五行和创始人的喜用放在一起看。</p>
               </Field>
             </TabsContent>
           </Tabs>
 
           <div className="mt-4 space-y-4">
-            <Field label="风格，可多选">
+            <Field label="风格（可多选）">
               <div className="flex flex-wrap gap-1.5">
                 {STYLES.map((style) => (
                   <button
@@ -322,14 +322,14 @@ export function Studio() {
             </Field>
             <div className="grid grid-cols-2 gap-3">
               <Field label="希望用到的字">
-                <Input value={form.prefer} maxLength={2} className="h-10" placeholder="可空" onChange={(event) => patch({ prefer: event.target.value })} />
+                <Input value={form.prefer} maxLength={2} className="h-10" placeholder="可不填" onChange={(event) => patch({ prefer: event.target.value })} />
               </Field>
               <Field label="避开的字">
-                <Input value={form.avoid} maxLength={4} className="h-10" placeholder="可空" onChange={(event) => patch({ avoid: event.target.value })} />
+                <Input value={form.avoid} maxLength={4} className="h-10" placeholder="可不填" onChange={(event) => patch({ avoid: event.target.value })} />
               </Field>
             </div>
             {error.includes("笔画") ? (
-              <Field label="补上康熙笔画">
+              <Field label="请补上康熙笔画">
                 <div className="grid grid-cols-2 gap-2">
                   {surnameChars.map((char) => (
                     <label key={char} className="text-sm">
@@ -337,7 +337,7 @@ export function Studio() {
                       <Input
                         inputMode="numeric"
                         className="h-10"
-                        placeholder="画数"
+                        placeholder="笔画"
                         value={form.strokes[char] || ""}
                         onChange={(event) =>
                           patch({ strokes: { ...form.strokes, [char]: event.target.value.replace(/[^\d]/g, "") } })
@@ -389,7 +389,7 @@ export function Studio() {
             <>
               <Reading result={result} />
               <div className="flex items-center justify-between gap-3">
-                <h2 className="font-serif text-2xl">八个可取的名字</h2>
+                <h2 className="font-serif text-2xl">八个推荐名字</h2>
                 <Button type="button" variant="outline" className="h-10" onClick={() => submit(form, seed + 1)}>
                   再取一批
                 </Button>
@@ -437,10 +437,10 @@ export function Studio() {
       <section id="method" className="border-t border-border">
         <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-10 md:grid-cols-4 md:px-8">
           {[
-            ["五行补缺", "先排八字，分身旺身弱，再取喜用。缺的元素只有落在喜用里才补，忌神不硬补。"],
-            ["生肖冲合", "春节定生肖，立春定年柱。相冲的字根直接避开，宜用的偏旁加分。"],
-            ["五格与大凶", "笔画用康熙部首还原。人格、地格、总格碰到三十四、四十四、五十四、六十四就不入选。"],
-            ["音韵与羽翼", "平仄错开，声母不要撞车。双名一字承德行，一字负责把名字扬起来。品牌再加一句记得住的话。"],
+            ["五行补缺", "先排八字，分清身旺还是身弱，再定喜用。所缺的五行，只有属于喜用才补；忌神不硬补。"],
+            ["生肖冲合", "生肖按春节确定，年柱按立春确定。与生肖相冲的字根一律避开，相合的偏旁会加分。"],
+            ["五格与大凶", "笔画按康熙字典的部首还原。人格、地格、总格若是三十四、四十四、五十四或六十四画，不予选用。"],
+            ["音韵与羽翼", "平仄错开，声母不要相重。双名里，一个字承德行，一个字取气象。品牌名还要配上一句好记的话。"],
           ].map(([title, body]) => (
             <article key={title}>
               <h2 className="font-serif text-xl">{title}</h2>
@@ -449,7 +449,7 @@ export function Studio() {
           ))}
         </div>
         <p className="mx-auto w-full max-w-6xl px-4 pb-10 text-xs leading-5 text-muted-foreground md:px-8">
-          这是一套可解释的文化计算：八字用节气，晚子时日柱进一日；五格按减八十循环的八十一数理。它帮你取舍名字，不是命运判决，也不代替商标检索。手机浏览器可以把本页加到主屏幕，之后从图标打开。
+          这是一套可以讲清楚的文化计算：八字按节气排列，晚子时日柱进入下一日；五格超过八十一，就减八十再查。它用来取舍名字，不是断命，也不能代替商标检索。用手机打开后，可以把本页加到主屏幕，以后从图标进入。
         </p>
       </section>
 
@@ -498,7 +498,7 @@ export function Studio() {
                     </div>
                     <p className="mt-2 text-sm leading-6">{glyph.sense}</p>
                     <p className="text-xs text-muted-foreground">
-                      {glyph.role === "root" ? "字根" : glyph.role === "wing" ? "羽翼" : "根翼兼有"} · {glyph.struct} ·{" "}
+                      {glyph.role === "root" ? "字根" : glyph.role === "wing" ? "羽翼" : "兼作字根与羽翼"} · {glyph.struct} ·{" "}
                       {ELEMENT_TONE[glyph.wx]}
                     </p>
                   </article>
@@ -530,7 +530,7 @@ export function Studio() {
                 </table>
               </div>
               <Button type="button" className="h-10" onClick={() => copy(selected.text)}>
-                {copied === selected.text ? "已抄下" : "抄下这个名字"}
+                {copied === selected.text ? "已复制" : "复制这个名字"}
               </Button>
             </>
           ) : null}
@@ -562,9 +562,9 @@ function EmptyState() {
   return (
     <div className="border border-dashed border-border bg-card/70 p-6 md:p-10">
       <p className="text-xs tracking-[0.28em] text-[#9c2f2f]">尚未排盘</p>
-      <h2 className="mt-3 font-serif text-3xl leading-tight">把生辰或行业交过来，名字从缺处长出来。</h2>
+      <h2 className="mt-3 font-serif text-3xl leading-tight">填上生辰或行业，再从五行所缺之处起名。</h2>
       <p className="mt-4 max-w-xl text-sm leading-7 text-muted-foreground">
-        新生儿会先看到四柱、五行强弱和喜用，再给出避开大凶笔画的名字。品牌会按行业的语气来取，也可以叠上创始人的八字。点开一个名字，能看见每个字为什么在这里。
+        给新生儿起名时，会先列出四柱、五行强弱和喜用，再给出避开大凶笔画的名字。给品牌起名时，会按行业的语气来取，也可以加上创始人的八字。点开一个名字，就能看到每个字为什么用在这里。
       </p>
     </div>
   )
@@ -594,7 +594,7 @@ function Reading({ result }: { result: Proposal }) {
             {chart.pillars.length < 4 ? (
               <div className="border border-dashed border-border px-2 py-3 text-center text-xs text-muted-foreground">
                 时柱
-                <p className="mt-2">未定时辰</p>
+                <p className="mt-2">时辰未定</p>
               </div>
             ) : null}
           </div>
@@ -621,12 +621,12 @@ function Reading({ result }: { result: Proposal }) {
       <div className="mt-4 flex flex-wrap gap-2">
         {result.yong.map((element) => (
           <Badge key={element} className="text-white" style={{ background: WX[element] }}>
-            喜{element}
+            喜用{element}
           </Badge>
         ))}
         {result.ji.map((element) => (
           <Badge key={element} variant="outline">
-            忌{element}
+            忌神{element}
           </Badge>
         ))}
       </div>

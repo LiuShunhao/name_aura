@@ -128,7 +128,7 @@ export function castChart(input: {
   const animalNote =
     baziAnimal === folkAnimal
       ? `生肖与年柱同为${folkAnimal}。年柱以立春为界，生肖以春节为界。`
-      : `春节生肖为${folkAnimal}，立春年柱为${baziAnimal}。起名避冲按春节生肖，八字五行按年柱。`
+      : `春节生肖为${folkAnimal}，立春后的年柱为${baziAnimal}。起名避冲按春节生肖，八字五行按立春年柱。`
 
   const monthElement = BRANCH_ELEMENT[monthZhi]
   const inCommand = monthElement === dayElement
@@ -141,14 +141,14 @@ export function castChart(input: {
       ? "月令生日主，得生。"
       : "月令不助日主。"
   const summary = [
-    `日主${dayMaster}${dayElement}，生在${monthZhi}月，${commandText}综合看是${strengthLabel}。`,
+    `日主为${dayMaster}${dayElement}，生于${monthZhi}月。${commandText}综合来看，属于${strengthLabel}。`,
     strong
-      ? "扶抑取泄、耗、克，让力量有去处。"
-      : "扶抑取生我与同我，先把日主托住。",
-    climate ? `${"亥子丑".includes(monthZhi) ? "冬月" : "夏月"}调候先取${climate}。` : "",
-    missing.length ? `盘面几乎不见${missing.join("、")}。只补落在喜用里的缺，不把忌神补进来。` : "",
-    `喜用${yongFinal.join("、")}，忌神${ji.join("、")}。`,
-    !hourKnown ? "未定时辰，时柱不入五行。" : hour >= 23 ? "晚子时，日柱按次日。" : "",
+      ? "身旺宜取泄、耗、克，让力量有去处。"
+      : "身弱宜取生扶，也就是印星与比劫，先把日主托住。",
+    climate ? `${"亥子丑".includes(monthZhi) ? "冬月" : "夏月"}调候，先取${climate}。` : "",
+    missing.length ? `命盘里几乎看不到${missing.join("、")}。只补落在喜用里的五行，不把忌神补进来。` : "",
+    `喜用为${yongFinal.join("、")}，忌神为${ji.join("、")}。`,
+    !hourKnown ? "时辰未定，时柱不计入五行。" : hour >= 23 ? "这是晚子时，日柱按次日计算。" : "",
   ]
     .filter(Boolean)
     .join("")
